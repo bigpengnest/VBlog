@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src='scripts/test.js' type="text/javascript" th:inline="javascript"></script>
+</head>
+    <body>
+        <p th:text="${user.name}?:'(no name)'">welcome to our grocery store!</p>
+        <input th:onblur="'javascript:test()'" id="name" value="name" placeholder="用户名">
+        <input id="password" value="password" placeholder="密码">
+
+    </body>
+</html>
