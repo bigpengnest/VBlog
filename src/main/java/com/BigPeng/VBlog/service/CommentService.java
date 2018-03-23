@@ -20,4 +20,9 @@ public class CommentService {
     public int addComment(Comment comment){
         return commentDao.addComment(comment);
     }
+
+    public int getCommentCount(int entityId,
+                               int entityType){
+        return commentDao.getCommentCount(entityId,entityType);
+    }
 }

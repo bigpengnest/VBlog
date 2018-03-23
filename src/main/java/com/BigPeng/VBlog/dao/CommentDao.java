@@ -21,4 +21,8 @@ public interface CommentDao {
             " entity_Type = #{entityType} order by created_date desc "})
     List<Comment> selectCommentByEntity(@Param("entityId") int userId,
                                         @Param("entityType") int entityType);
+
+    @Select({"select count(comment_id) from ",TABLE_NAME," where entity_id=#{entityId} and entity_type=#{entityType}"})
+    int getCommentCount(@Param("entityId") int entityId,
+                        @Param("entityType") int entityType);
 }

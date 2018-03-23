@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class BlogController {
@@ -84,7 +83,7 @@ public class BlogController {
             logger.error("添加博客失败"+e.getMessage());
         }
         model.addAttribute("msg","提交失败");
-        return "/blog/add";
+        return "redirect:/blog/add";
     }
 
     @RequestMapping("/blog/{blogId}")
@@ -93,11 +92,11 @@ public class BlogController {
         Blog blog = blogService.getBlogById(blogId);
         User user = userService.selectById(blog.getUserId());
         List<Comment> commentList= commentService.selectCommentByEntity(blogId,EntityType.ENTITY_BLOG);
+        int commentCount = commentService.getCommentCount(blogId,EntityType.ENTITY_BLOG);
         model.addAttribute("blog",blog);
         model.addAttribute("user",user);
         model.addAttribute("commentList",commentList);
-        for (Comment comment :commentList)
-            System.out.println(comment.getCreatedDate());
+        model.addAttribute("commentCount",commentCount);
         return "detail";
     }
     @RequestMapping("/detail")

@@ -2,8 +2,10 @@ package com.BigPeng.VBlog.service;
 
 import com.BigPeng.VBlog.dao.BlogDao;
 import com.BigPeng.VBlog.model.Blog;
+import com.BigPeng.VBlog.util.VBlogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,11 @@ public class BlogService {
     }
 
     public List<Blog> getBlogList(int userId,int offset,int limit){
-        return blogDao.getBlogList(userId,offset,limit);
+        List<Blog> list = blogDao.getBlogList(userId,offset,limit);
+        for (Blog blog:list){
+            blog.setContent(VBlogUtil.StripHTML(blog.getContent()));
+        }
+        return list;
     }
 
     public Blog getBlogById(int blogId){

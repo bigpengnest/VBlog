@@ -117,7 +117,7 @@
 						<div class="clearfix"> </div>
 						<p class="tortor" th:utext="${blog.getContent()}"></p>
 						<div class="three-com" >
-							<h3>2 Comment <span>on</span> <label>Donec volutpat ligula non dapibus volutpat</label></h3>
+							<h3 > <span th:text="${commentCount}"></span> <span>Comments</span></h3>
 							<!--评论区-->
 							<div th:each="comment:${commentList}">
 								<div class="tom-grid">

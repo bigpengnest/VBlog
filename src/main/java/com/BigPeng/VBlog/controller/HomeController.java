@@ -57,7 +57,7 @@ public class HomeController {
             return "home";
         }else {
             model.addAttribute("user",user);
-            return "login";
+            return "redirect:/";
         }
 
     }
