@@ -3,28 +3,37 @@ package com.BigPeng.VBlog.model;
 import java.util.Date;
 
 public class Blog {
-    private int id;
-    private String title;
+    private int blogId;
+    private String blogTitle;
     private String content;
     private int userId;
-    private Date creatDate;
+    private Date createdDate;
     private int commentCount;
     private String classify;
+    private String imgsrc;
 
-    public int getId() {
-        return id;
+    public String getImgsrc() {
+        return imgsrc;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setImgsrc(String imgsrc) {
+        this.imgsrc = imgsrc;
     }
 
-    public String getTitle() {
-        return title;
+    public int getBlogId() {
+        return blogId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
+    public String getBlogTitle() {
+        return blogTitle;
+    }
+
+    public void setBlogTitle(String blogTitle) {
+        this.blogTitle = blogTitle;
     }
 
     public String getContent() {
@@ -43,12 +52,12 @@ public class Blog {
         this.userId = userId;
     }
 
-    public Date getCreatDate() {
-        return creatDate;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatDate(Date creatDate) {
-        this.creatDate = creatDate;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public int getCommentCount() {

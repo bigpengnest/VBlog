@@ -16,7 +16,7 @@
 <body>
 <div align="center">
     <form th:object="${blog}" th:method="post" th:action="@{blog/add}" >
-        <input class="title" th:field="*{title}" id="title" type="text" placeholder="请输入博客标题">
+        <input class="title" th:field="*{blogTitle}" id="title" type="text" placeholder="请输入博客标题">
         <input class="classify" th:field="*{classify}" id="classify" type="text" placeholder="请输入博客分类">
         <button class="button" data-options="iconCls:'icon-save'">提交</button>
         <script name = "myContent" id="editor" type="text/plain" class="content"></script>

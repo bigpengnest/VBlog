@@ -1,6 +1,8 @@
 package com.BigPeng.VBlog.controller;
 
+import com.BigPeng.VBlog.model.Blog;
 import com.BigPeng.VBlog.model.User;
+import com.BigPeng.VBlog.service.BlogService;
 import com.BigPeng.VBlog.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -21,6 +24,9 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    BlogService blogService;
+
     @RequestMapping("/")
     public String index(Model model){
         User user = new User();
@@ -28,7 +34,7 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping(path = {"/login"})
     public String login(Model model,
                         @ModelAttribute(value="user")User user,
                         HttpServletResponse response){
@@ -38,7 +44,9 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                List<Blog> list = blogService.getBlogList(userService.selectByName(user.getName()).getId(),0,5);
                 model.addAttribute("user",user);
+                model.addAttribute("list",list);
                 return "home";
             }else{
                 model.addAttribute("msg",map.get("msg"));

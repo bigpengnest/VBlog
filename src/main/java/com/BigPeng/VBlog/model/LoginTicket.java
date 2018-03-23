@@ -2,6 +2,11 @@ package com.BigPeng.VBlog.model;
 
 import java.util.Date;
 
+/**
+ * 用于保存用户的登录状态
+ * expired:失效时间
+ * status:用户登录状态，0表示退出，1表示自动登录。
+ */
 public class LoginTicket {
     private int id;
     private int userId;

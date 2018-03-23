@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Blog</title>
-<!-- for-mobile-apps -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Blog</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-		function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!-- //for-mobile-apps -->
-<link href="styles/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-<link href="styles/style.css" rel="stylesheet" type="text/css" media="all" />
-<!-- js -->
-<script src="scripts/jquery-1.11.1.min.js"></script>
-<!-- //js -->
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+            function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link href="../styles/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="../styles/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- js -->
+    <script src="../scripts/jquery-1.11.1.min.js"></script>
+    <!-- //js -->
 </head>
 <body>
 
@@ -44,8 +44,8 @@
 									<li><a th:href="@{/home}" class="hvr-underline-from-left"><i class="home1"></i>Home</a></li>
 									<li><a th:href="@{/photo}" class="hvr-underline-from-left"><i class="picture1"></i>Photos</a></li>
 									<li class="active"><a href="home.html"><i class="edit"></i>Blog</a></li>
-									<li><a href="short-codes.html" class="hvr-underline-from-left"><i class="text-size1"></i>Short Codes</a></li>
-									<li><a href="mail.html" class="hvr-underline-from-left"><i class="envelope1"></i>Mail US</a></li>
+									<li><a th:href="@{/editor}" class="hvr-underline-from-left"><i class="text-size1"></i>Editor</a></li>
+									<li><a th:href="@{/friends}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="join">
-                        <a href="single.html">Learn More</a>
+                        <a href="detail.html">Learn More</a>
                     </div>
                     <h3>Benefits</h3>
                     <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
@@ -112,42 +112,14 @@
                     </div>
                     <div class="blog">
                         <!--博客列表-->
-                        <div class="blog-grid">
+                        <div class="blog-grid" th:each="blog:${list}">
                             <div class="col-xs-4 blog-grid-left">
-                                <a href="single.html"><img src="images/1.jpg" alt=" " class="img-responsive" /></a>
+                                <a href="detail.html"><img th:src="@{'http:'+${blog.getImgsrc()}}"  alt=" " class="img-responsive" /></a>
                             </div>
                             <div class="col-xs-8 blog-grid-right">
-                                <h4><a href="single.html">sint occaecat cupidatat non proident</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation.</p>
-                                <a href="single.html"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="blog-grid">
-                            <div class="col-xs-4 blog-grid-left">
-                                <a href="single.html"><img src="images/2.jpg" alt=" " class="img-responsive" /></a>
-                            </div>
-                            <div class="col-xs-8 blog-grid-right">
-                                <h4><a href="single.html">Sed ut perspiciatis unde omnis iste natus</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation.</p>
-                                <a href="single.html"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="blog-grid">
-                            <div class="col-xs-4 blog-grid-left">
-                                <a href="single.html"><img src="images/3.jpg" alt=" " class="img-responsive" /></a>
-                            </div>
-                            <div class="col-xs-8 blog-grid-right">
-                                <h4><a href="single.html">At vero eos et accusamus et iusto odio</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation.</p>
-                                <a href="single.html"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                                <h4><a th:href="@{'/blog/'+ ${blog.getBlogId()}}" th:text="${blog.getBlogTitle()}?:'meiyoushuju'"/></h4>
+                                <div class="content_home"><p th:utext="${blog.getContent()}"></p></div>
+                                <a href="detail.html"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
                             </div>
                             <div class="clearfix"> </div>
                         </div>
@@ -155,38 +127,37 @@
                     <div class="msg-text-bottom">
                         <div class="col-md-4 msg-text-bottom-left">
                             <figure class="effect-winston">
-                                <a href="single.html"><img src="images/4.jpg" alt=" " class="img-responsive" />
+                                <a href="detail.html"><img src="../images/4.jpg" alt=" " class="img-responsive" />
                                     <figcaption>
 
                                     </figcaption>
                                 </a>
                             </figure>
-
-                            <h3><a href="single.html">vel illum qui dolorem</a></h3>
+                            <h3><a href="detail.html">vel illum qui dolorem</a></h3>
                             <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
                                 consectetur, adipisci velit, sed quia.</p>
                         </div>
                         <div class="col-md-4 msg-text-bottom-left">
                             <figure class="effect-winston">
-                                <a href="single.html"><img src="images/5.jpg" alt=" " class="img-responsive" />
+                                <a href="detail.html"><img src="../images/5.jpg" alt=" " class="img-responsive" />
                                     <figcaption>
 
                                     </figcaption>
                                 </a>
                             </figure>
-                            <h3><a href="single.html">quia dolor sit amet</a></h3>
+                            <h3><a href="detail.html">quia dolor sit amet</a></h3>
                             <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
                                 consectetur, adipisci velit, sed quia.</p>
                         </div>
                         <div class="col-md-4 msg-text-bottom-left">
                             <figure class="effect-winston">
-                                <a href="single.html"><img src="images/6.jpg" alt=" " class="img-responsive" />
+                                <a href="detail.html"><img src="../images/6.jpg" alt=" " class="img-responsive" />
                                     <figcaption>
 
                                     </figcaption>
                                 </a>
                             </figure>
-                            <h3><a href="single.html">porro quisquam est</a></h3>
+                            <h3><a href="detail.html">porro quisquam est</a></h3>
                             <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
                                 consectetur, adipisci velit, sed quia.</p>
                         </div>
@@ -221,7 +192,7 @@
 	</div>
 <!-- //banner-body -->
 <!-- for bootstrap working -->
-	<script src="scripts/bootstrap.js"></script>
+	<script src="../scripts/bootstrap.js"></script>
 <!-- //for bootstrap working -->
 </body>
 </html>
