@@ -1,11 +1,9 @@
 package com.BigPeng.VBlog.controller;
 
 import com.BigPeng.VBlog.dao.LoginTicketDao;
-import com.BigPeng.VBlog.model.Blog;
-import com.BigPeng.VBlog.model.HostHolder;
-import com.BigPeng.VBlog.model.LoginTicket;
-import com.BigPeng.VBlog.model.User;
+import com.BigPeng.VBlog.model.*;
 import com.BigPeng.VBlog.service.BlogService;
+import com.BigPeng.VBlog.service.CommentService;
 import com.BigPeng.VBlog.service.UserService;
 import com.BigPeng.VBlog.util.VBlogUtil;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class BlogController {
@@ -36,6 +35,9 @@ public class BlogController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping("/editor")
     public String showPage(Model model){
@@ -90,8 +92,12 @@ public class BlogController {
                              @PathVariable("blogId") int blogId){
         Blog blog = blogService.getBlogById(blogId);
         User user = userService.selectById(blog.getUserId());
+        List<Comment> commentList= commentService.selectCommentByEntity(blogId,EntityType.ENTITY_BLOG);
         model.addAttribute("blog",blog);
         model.addAttribute("user",user);
+        model.addAttribute("commentList",commentList);
+        for (Comment comment :commentList)
+            System.out.println(comment.getCreatedDate());
         return "detail";
     }
     @RequestMapping("/detail")

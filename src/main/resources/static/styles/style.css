@@ -712,6 +712,8 @@ figure.effect-winston:hover figcaption::before {
 /*-- //gallery --*/
 /*-- blog --*/
 .blog-grid-left img{
+	width: 221px;
+	height: 151.1px;
 	padding:.3em;
 	border:1px dotted #999;
 }

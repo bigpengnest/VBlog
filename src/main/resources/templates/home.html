@@ -114,7 +114,7 @@
                         <!--博客列表-->
                         <div class="blog-grid" th:each="blog:${list}">
                             <div class="col-xs-4 blog-grid-left">
-                                <a href="detail.html"><img th:src="@{'http:'+${blog.getImgsrc()}}"  alt=" " class="img-responsive" /></a>
+                                <a th:href="@{'/blog/'+ ${blog.getBlogId()}}"><img th:src="@{'http:'+${blog.getImgsrc()}}"  alt=" " class="img-responsive" /></a>
                             </div>
                             <div class="col-xs-8 blog-grid-right">
                                 <h4><a th:href="@{'/blog/'+ ${blog.getBlogId()}}" th:text="${blog.getBlogTitle()}?:'meiyoushuju'"/></h4>
