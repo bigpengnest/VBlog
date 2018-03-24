@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDao {
     String TABLE_NAME = " user ";
-    String INSERT_FIELDS = " name, password, salt, head_url, email ";
+    String INSERT_FIELDS = " name, password, salt, head_url, email, signature ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
     @Select({"select "+SELECT_FIELDS+" from "+TABLE_NAME+" where id=#{id}"})
@@ -20,6 +20,6 @@ public interface UserDao {
     @Select({"select "+SELECT_FIELDS+" from "+TABLE_NAME+" where email=#{email}"})
     User selectByEmail(String email);
 
-    @Insert({"insert into "+ TABLE_NAME+" ( "+INSERT_FIELDS+" ) values (#{name},#{password},#{salt},#{headUrl},#{email})"})
+    @Insert({"insert into "+ TABLE_NAME+" ( "+INSERT_FIELDS+" ) values (#{name},#{password},#{salt},#{headUrl},#{email},#{signature})"})
     int addUser(User user);
 }

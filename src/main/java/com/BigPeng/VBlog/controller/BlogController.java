@@ -1,6 +1,7 @@
 package com.BigPeng.VBlog.controller;
 
 import com.BigPeng.VBlog.dao.LoginTicketDao;
+import com.BigPeng.VBlog.dao.ViewObject;
 import com.BigPeng.VBlog.model.*;
 import com.BigPeng.VBlog.service.BlogService;
 import com.BigPeng.VBlog.service.CommentService;
@@ -93,9 +94,20 @@ public class BlogController {
         User user = userService.selectById(blog.getUserId());
         List<Comment> commentList= commentService.selectCommentByEntity(blogId,EntityType.ENTITY_BLOG);
         int commentCount = commentService.getCommentCount(blogId,EntityType.ENTITY_BLOG);
+
+        List<ViewObject> comments = new LinkedList<>();
+        for(Comment comment : commentList){
+            ViewObject vo = new ViewObject();
+            User usertemp = userService.selectById(comment.getUserId());
+            vo.set("commentUserName",usertemp.getName());
+            vo.set("commentUserHeadUrl",usertemp.getHeadUrl());
+            vo.set("commentUserId",usertemp.getId());
+            vo.set("comment",comment);
+            comments.add(vo);
+        }
         model.addAttribute("blog",blog);
         model.addAttribute("user",user);
-        model.addAttribute("commentList",commentList);
+        model.addAttribute("comments",comments);
         model.addAttribute("commentCount",commentCount);
         return "detail";
     }

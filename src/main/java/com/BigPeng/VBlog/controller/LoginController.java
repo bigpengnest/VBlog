@@ -47,7 +47,7 @@ public class LoginController {
                 List<Blog> list = blogService.getBlogList(userService.selectByName(user.getName()).getId(),0,5);
                 model.addAttribute("user",user);
                 model.addAttribute("list",list);
-                return "home";
+                return "redirect:/home";
             }else{
                 model.addAttribute("msg",map.get("msg"));
                 return "login";

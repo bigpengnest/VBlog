@@ -23,7 +23,8 @@ public class BlogService {
     public List<Blog> getBlogList(int userId,int offset,int limit){
         List<Blog> list = blogDao.getBlogList(userId,offset,limit);
         for (Blog blog:list){
-            blog.setContent(VBlogUtil.StripHTML(blog.getContent()));
+            String content = VBlogUtil.StripHTML(blog.getContent());
+            blog.setContent(content);
         }
         return list;
     }

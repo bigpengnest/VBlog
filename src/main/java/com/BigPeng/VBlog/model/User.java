@@ -7,6 +7,15 @@ public class User {
     private String salt;
     private String headUrl;
     private String email;
+    private String signature;
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
     public int getId() {
         return id;

@@ -43,9 +43,9 @@
 						<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
 							<nav class="stroke">
 								<ul class="nav navbar-nav">
-                                    <li class="active"><a th:href="@{'/'+${user.getId()}+'/home'}"><i class="edit"></i>Home</a></li>
+									<li><a th:href="@{'/'+${user.getId()}+'/home'}" class="hvr-underline-from-left"><i class="home1"></i>Home</a></li>
 									<li><a th:href="@{/photo}" class="hvr-underline-from-left"><i class="picture1"></i>Photos</a></li>
-                                    <li><a th:href="@{'/'+${user.getId()}+'/blog'}" class="hvr-underline-from-left"><i class="home1"></i>Blog</a></li>
+									<li class="active"><a th:href="@{'/'+${user.getId()}+'/blog'}"><i class="edit"></i>Blog</a></li>
 									<li><a th:href="@{/editor}" class="hvr-underline-from-left"><i class="text-size1"></i>Editor</a></li>
 									<li><a th:href="@{/friends}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
 								</ul>
@@ -108,66 +108,43 @@
                 </div>
 			</div>
             <div class="col-xs-9 banner-body-right">
-                    <div class="gallery-head">
-                        <h5><span th:text="${user.getName()}"></span>的窝</h5>
-                        <p th:text="${user.getSignature()}"></p>
-                    </div>
-                    <div class="blog">
-                        <!--博客列表-->
-                        <div class="blog-grid" th:each="blogMap:${blogs}">
-                            <div class="col-xs-4 blog-grid-left" >
-                                <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}"  alt=" " class="img-responsive" /></a>
-                            </div>
-                            <div class="col-xs-8 blog-grid-right">
-                                <h4><a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}" th:text="${blogMap.get('blog').getBlogTitle()}?:'meiyoushuju'"/><p th:text="${#dates.format(blogMap.get('blog').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"></p></h4>
-                                <div class="content_home"><p th:utext="${blogMap.get('blog').getContent()}"></p></div>
-                                <a href="detail.html"><span th:text="${blogMap.get('count')}"></span>条评论</a>
-                            </div>
-                            <div class="clearfix"> </div>
+                <div class="gallery-head">
+                    <h5><span th:text="${user.getName()}"></span>窝里的Blog</h5>
+                    <p th:text="${user.getSignature()}"></p>
+                </div>
+                <div class="blog">
+                    <!--博客列表-->
+                    <div class="blog-grid" th:each="blogMap:${blogs}">
+                        <div class="col-xs-4 blog-grid-left">
+                            <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}"  alt=" " class="img-responsive" /></a>
                         </div>
-                    </div>
-                    <div class="msg-text-bottom">
-                        <div class="col-md-4 msg-text-bottom-left">
-                            <figure class="effect-winston">
-                                <a href="detail.html"><img src="../images/4.jpg" alt=" " class="img-responsive" />
-                                    <figcaption>
-
-                                    </figcaption>
-                                </a>
-                            </figure>
-                            <h3><a href="detail.html">vel illum qui dolorem</a></h3>
-                            <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                                consectetur, adipisci velit, sed quia.</p>
-                        </div>
-                        <div class="col-md-4 msg-text-bottom-left">
-                            <figure class="effect-winston">
-                                <a href="detail.html"><img src="../images/5.jpg" alt=" " class="img-responsive" />
-                                    <figcaption>
-
-                                    </figcaption>
-                                </a>
-                            </figure>
-                            <h3><a href="detail.html">quia dolor sit amet</a></h3>
-                            <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                                consectetur, adipisci velit, sed quia.</p>
-                        </div>
-                        <div class="col-md-4 msg-text-bottom-left">
-                            <figure class="effect-winston">
-                                <a href="detail.html"><img src="../images/6.jpg" alt=" " class="img-responsive" />
-                                    <figcaption>
-
-                                    </figcaption>
-                                </a>
-                            </figure>
-                            <h3><a href="detail.html">porro quisquam est</a></h3>
-                            <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                                consectetur, adipisci velit, sed quia.</p>
+                        <div class="col-xs-8 blog-grid-right">
+                            <h4><a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}" th:text="${blogMap.get('blog').getBlogTitle()}?:'meiyoushuju'"/><p th:text="${#dates.format(blogMap.get('blog').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"></p></h4>
+                            <div class="content_home"><p th:utext="${blogMap.get('blog').getContent()}"></p></div>
+                            <a href="detail.html"><span th:text="${blogMap.get('count')}"></span>条评论</a>
                         </div>
                         <div class="clearfix"> </div>
                     </div>
                 </div>
+                <div class="grid_3 grid_5">
+                    <h3>Pagination</h3>
+                    <div class="col-md-6">
+                        <nav>
+                            <ul class="pagination pagination-lg">
+                                <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                <li><a th:href="@{/blog/offset}">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
 <!--			<div class="clearfix"> </div>-->
-
 			<div class="clearfix"> </div>
 			<div class="footer">
 				<div class="footer-left">

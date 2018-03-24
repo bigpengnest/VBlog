@@ -62,9 +62,10 @@ public class UserService {
         user = new User();
         user.setName(username);
         user.setSalt(UUID.randomUUID().toString().substring(0,5));
-        user.setHeadUrl(" ");
+        user.setHeadUrl("\\ueditor\\jsp\\upload\\image\\default\\headimg.jpg");
         user.setPassword(VBlogUtil.MD5(password+user.getSalt()));
         user.setEmail(email);
+        user.setSignature(" ");
         userDao.addUser(user);
 
         return map;
