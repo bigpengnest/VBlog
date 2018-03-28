@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Blog</title>
     <!-- for-mobile-apps -->
@@ -16,54 +16,89 @@
     <script th:inline="javascript" th:src="@{/scripts/jquery.min.js}"></script>
     <script th:inline="javascript" th:src="@{/scripts/skel.min.js}"></script>
     <script th:inline="javascript" th:src="@{/scripts/util.js}"></script>
+    <script th:inline="javascript" th:src="@{/scripts/jquery.wmuSlider.js}"></script>
     <!--[if lte IE 8]><script th:src="@{../scripts/ie/respond.min.js}"></script><![endif]-->
     <script th:inline="javascript" th:src="@{/scripts/main.js}"></script>
-        <script type="text/javascript" th:inline="javascript">
-            /*<![CDATA[*/
-            window.onload = function(){
-                var user = /*[[${user.getName()}]]*/;
-                var viewUser = /*[[${viewUser.getName()}]]*/;
-                if (user == viewUser){
-                    $("#follow").hide();
-                }
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        window.onload = function(){
+            var user = /*[[${user.getName()}]]*/;
+            var viewUser = /*[[${viewUser.getName()}]]*/;
+            if (user == viewUser){
+                $("#follow").hide();
             }
-            function follow() {
-                var userId = /*[[${user.getId()}]]*/;
-                var followeeId = /*[[${viewUser.getId()}]]*/;
-                var follow =$("#follow").text();
-                if (follow=="加关注"){
-                    $.ajax({
-                        url:"/followUser",
-                        type:"post",
-                        data:{"userId":userId,"followeeId":followeeId},
-                        dataType:"json",
-                        success:function(result) {
-                            if (result.code==0){
-                                $("#follow").val(false);
-                                $("#follow").text("已关注")
-                            }
-                        }
-                    })
-                }else{
-                    $.ajax({
-                        url:"/unfollowUser",
-                        type:"post",
-                        data:{"userId":userId,"followeeId":followeeId},
-                        dataType:"json",
-                        success:function(result) {
-                            if (result.code==0){
-                                $("#follow").val(true);
-                                $("#follow").text("加关注")
-                            }
-                        }
-                    })
+        }
+
+
+        function searchUser() {
+            var name = $("#sreachUser").val();
+            $.ajax({
+                url: '/test/search',
+                type:"post",
+                data:{"username":name},
+                dataType:"json",
+                success: function (result) {
+                    var temp = result.name;
+                    var u_li ='<ul class="links">';
+                        u_li+= '<li>';
+                        u_li+='<a href="#">';
+                        u_li+='<h3>Lorem ipsum</h3>';
+                        u_li+='<p>'+temp+'</p>';
+                        u_li+='</a>';
+                        u_li+='</li>';
+                        u_li+='</ul>';
+                    var $li = $(u_li);
+                    $("#searchResult").append($li);
                 }
+            });
+        }
+        function follow() {
+            var userId = /*[[${user.getId()}]]*/;
+            var followeeId = /*[[${viewUser.getId()}]]*/;
+            var follow =$("#follow").text();
+            if (follow=="加关注"){
+                $.ajax({
+                    url:"/followUser",
+                    type:"post",
+                    data:{"userId":userId,"followeeId":followeeId},
+                    dataType:"json",
+                    success:function(result) {
+                        if (result.code==0){
+                            $("#follow").val(false);
+                            $("#follow").text("已关注")
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"/unfollowUser",
+                    type:"post",
+                    data:{"userId":userId,"followeeId":followeeId},
+                    dataType:"json",
+                    success:function(result) {
+                        if (result.code==0){
+                            $("#follow").val(true);
+                            $("#follow").text("加关注")
+                        }
+                    }
+                })
             }
-            /*]]>*/
-        </script>
+        }
+
+/*        function follower() {
+            ${"#follower-tab"}.show();
+            ${"#followee-tab"}.hide();
+        }
+        function followee() {
+                    ${"#follower-tab"}.hide();
+                    ${"#followee-tab"}.show();
+                }*/
+        /*]]>*/
+    </script>
     <!-- //js -->
 </head>
-<body>
+<p>
     <div id="wrapper">
 		<header id="header">
             <h1>
@@ -89,12 +124,13 @@
     </div>
 <!-- banner-body -->
 	<div class="banner-body">
+
 		<div class="container">
 			<div class="banner-body-content">
 			<div class="col-xs-3 banner-body-left">
 				<div class="logo">
-					<h1><a class="logo_head"><img th:src="@{'http:'+${viewUser.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/> </a></h1>
-                    <h1><a th:text="${viewUser.getName()}" style="margin-top: 10px"></a></h1>
+					<h1><a th:href="@{/setting}" class="logo_head"><img  th:src="@{'http:'+${viewUser.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/> </a></h1>
+                    <h1><a th:text="${viewUser.name}" style="margin-top: 10px"></a></h1>
                 </div>
                 <div class="clearfix" style="height: 20px"> </div>
                 <div class="join" >
@@ -116,11 +152,11 @@
 						<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
 							<nav class="stroke">
 								<ul class="nav navbar-nav">
-									<li><a th:href="@{'/user/'+${viewUser.getId()}}" class="hvr-underline-from-left"><i class="home1"></i>Home</a></li>
+                                    <li><a th:href="@{'/user/'+${viewUser.getId()}}" class="hvr-underline-from-left"><i class="edit"></i>Home</a></li>
 									<li><a th:href="@{/photo}" class="hvr-underline-from-left"><i class="picture1"></i>Photos</a></li>
-									<li class="active"><a th:href="@{'/user/'+${viewUser.getId()}+'/blog'}"><i class="edit"></i>Blog</a></li>
-									<li><a th:href="@{/editor}" class="hvr-underline-from-left"><i class="text-size1"></i>Editor</a></li>
-									<li><a th:href="@{'/user/'+${viewUser.getId()}+'/friends'}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
+                                    <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog'}" class="hvr-underline-from-left"><i class="home1"></i>Blog</a></li>
+									<li><a th:href="@{/editor}"><i class="text-size1"></i>Editor</a></li>
+									<li class="active"><a th:href="@{'/user/'+${viewUser.getId()}+'/friends'}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -182,55 +218,52 @@
 			</div>
             <div class="col-xs-9 banner-body-right">
                 <div class="gallery-head">
-                    <h5><span th:text="${viewUser.getName()}"></span>窝里的Blog</h5>
+                    <h5><span th:text="${viewUser.getName()}"></span>认识的其他鸟</h5>
                     <p th:text="${viewUser.getSignature()}"></p>
                 </div>
-                <div class="blog">
-                    <!--博客列表-->
-                    <div class="blog-grid" th:each="blogMap:${blogs}">
-                        <div class="col-xs-4 blog-grid-left">
-                            <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}"  alt=" " class="img-responsive" /></a>
+                <p class="grid_3 grid_5">
+                    <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#follower" id="follower-tab" role="tab" data-toggle="tab" aria-controls="follower" aria-expanded="true">关注者</a></li>
+                            <li role="presentation"><a href="#followee" role="tab" id="followee-tab" data-toggle="tab" aria-controls="followee">被关注者</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="follower" aria-labelledby="follower-tab">
+                                <div class="tom-grid" th:each="follower:${followers}">
+                                    <div class="tom">
+                                        <img th:src="@{'http:'+${follower.getHeadUrl()}}" />
+                                    </div>
+                                    <div class="tom-right" >
+                                        <div class="Hardy">
+                                            <h4 style="margin:5px 0 15px 0;"><a style="font-size:25px; " th:href="@{'/user/'+${follower.getId()}}" th:text="${follower.getName()}"></a></h4>
+                                            <p><label  style="font-size: 16px" th:text="${follower.getSignature()}"></label></p>
+                                        </div>
+                                        <div class="clearfix"> </div>
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="followee" aria-labelledby="followee-tab" >
+                                <div class="tom-grid" th:each="followee:${followees}">
+                                    <div class="tom">
+                                        <img th:src="@{'http:'+${followee.getHeadUrl()}}" />
+                                    </div>
+                                    <div class="tom-right" >
+                                        <div class="Hardy">
+                                            <h4 style="margin:5px 0 15px 0;"><a style="font-size:25px; " th:href="@{'/user/'+${followee.getId()}}" th:text="${followee.getName()}"></a></h4>
+                                            <p><label style="font-size: 16px" th:text="${followee.getSignature()}"></label></p>
+                                        </div>
+                                        <div class="clearfix"> </div>
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-8 blog-grid-right">
-                            <h4><a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}" th:text="${blogMap.get('blog').getBlogTitle()}?:'meiyoushuju'"/><p th:text="${#dates.format(blogMap.get('blog').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"></p></h4>
-                            <div class="content_home"><p th:utext="${blogMap.get('blog').getContent()}"></p></div>
-                            <a href="detail.html"><span th:text="${blogMap.get('count')}"></span>条评论</a>
-                        </div>
-                        <div class="clearfix"> </div>
                     </div>
-                </div>
-                <div class="grid_3 grid_5">
-                    <div class="col-md-6" style="display: inline">
-                        <nav>
-                            <ul class="pagination pagination-lg" style="display: inline">
-                                <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getFirstPage()}}" aria-label="Previous"><span aria-hidden="true">第一页</span></a></li>
-                                <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getPrePage()}}" ><span>上一页</span></a></li>
-                                <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getPageNum()}}"><span th:text="${page.getPageNum()}"></span></a></li>
-                                <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getNextPage()}}"><span>下一页</span></a></li>
-                                <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getLastPage()}}" ><span>最后一页</span></a></li>
-                                <li><a aria-label="Next" ><span aria-hidden="true">共<span th:text="${page.getLastPage()}"></span>页</span></a></li>
-                                <form class="transpage" th:action="@{'/user/'+${user.getId()}+'/blog/trans'}" th:method="post" style="margin:0px;display: inline;float: left">
-                                    <input aria-label="Next" style="display: inline" type="text" class="form-control" name="transpage" placeholder="输入跳转页码">
-                                    <span class="input-group-btn" style="display: inline">
-                                        <button aria-label="Next" class="btn btn-default" type="submit">Go!</button>
-                                    </span>
-                                </form>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="clearfix"> </div>
-                </div>
-                <div class="typo">
-                    <div class="row">
-                        <div class="col-lg-6 in-gp-tl">
-                            <div class="input-group">
-
-                            </div><!-- /input-group -->
-                        </div><!-- /.col-lg-6 -->
-                    </div><!-- /.row -->
-                </div>
+                </p>
             </div>
 <!--			<div class="clearfix"> </div>-->
+
 			<div class="clearfix"> </div>
 			<div class="footer">
 				<div class="footer-left">

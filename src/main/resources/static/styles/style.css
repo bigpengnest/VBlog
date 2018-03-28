@@ -1,3 +1,42 @@
+.join{
+	text-align: center;
+}
+
+.a-upload {
+	padding: 4px 10px;
+	height: 35px;
+	width: 140px;
+	line-height: 20px;
+	position: relative;
+	cursor: pointer;
+	color: #888;
+	background: #fafafa;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	font-size: 14px;
+}
+
+.a-upload  input {
+	position: absolute;
+	font-size: 100px;
+	right: 0;
+	top: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	cursor: pointer
+}
+
+.a-upload:hover {
+	color: #444;
+	background: #eee;
+	border-color: #ccc;
+	text-decoration: none
+}
+
 .content_home{
 	height: 80px;
 	width: 472px;
@@ -35,7 +74,7 @@ body a:hover{
 }
 .banner-body{
 	background:url(../images/banner.png) 0px 0px;
-	padding:5em 0;
+	padding:10px 0;
 }
 .banner-body-content {
     padding: 4em 3em;
@@ -46,6 +85,7 @@ body a:hover{
 }
 /*-- logo --*/
 .logo{
+	margin: 0 auto 40px auto;
 	width:200px;
 	height:200px;
 	text-align:center;
@@ -53,7 +93,7 @@ body a:hover{
 .logo h1 a{
 	color: #000000;
     text-decoration: none;
-    font-size: 1em;
+    font-size: 20px;
     display: block;
 	font-family: 幼圆;
 }
@@ -603,7 +643,7 @@ ul.wmuSliderPagination {
 /*-- //footer --*/
 /*-- gallery --*/
 .gallery-grids,.blog,.single{
-	margin:3em 0 5em;
+	margin:3em 0 0;
 }
 .gallery-grid {
     float: left;
@@ -615,7 +655,7 @@ ul.wmuSliderPagination {
 .gallery-head h5{
 	font-size:2em;
     color: #2890e6;
-    margin: 1.5em 0 0;
+    margin: 20px 0 0;
 }
 .gallery-head p{
 	font-size:14px;
@@ -1068,11 +1108,10 @@ li.list-group-item1 {
 }  
 .grid_5{
 	background:none;
-	padding:2em 0;
+	padding:0 0;
 }
 .grid_5 h3, .grid_5 h2, .grid_5 h1, .grid_5 h4, .grid_5 h5, h3.hdg, h3.bars {
-	margin-bottom: 1em;
-    color:#D5B319;
+    color:#2890e6;
     letter-spacing: 1px;
 }
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
@@ -1655,8 +1694,6 @@ h2.typoh2{
 		width: 130px;
 		height: 130px;
 	}
-	.logo h1 a {
-	}
 }
 @media (max-width:480px){
 	.banner-body-left {
@@ -1675,8 +1712,6 @@ h2.typoh2{
 		width: 150px;
 		height: 150px;
 		margin: 0 auto;
-	}
-	.logo h1 a {
 	}
 	.top-nav {
 		margin: 1em 0 0;
@@ -1880,8 +1915,5 @@ h2.typoh2{
 	.logo {
 		width: 125px;
 		height: 125px;
-	}
-	.logo h1 a {
-		font-size: .9em;
 	}
 }

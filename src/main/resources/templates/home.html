@@ -9,24 +9,98 @@
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
             function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!-- //for-mobile-apps -->
-    <link href="../styles/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="../styles/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{/styles/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{/styles/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/styles/main.css}" />
     <!-- js -->
-    <script src="../scripts/jquery-1.11.1.min.js"></script>
+    <script th:inline="javascript" th:src="@{/scripts/jquery.min.js}"></script>
+    <script th:inline="javascript" th:src="@{/scripts/skel.min.js}"></script>
+    <script th:inline="javascript" th:src="@{/scripts/util.js}"></script>
+    <!--[if lte IE 8]><script th:src="@{../scripts/ie/respond.min.js}"></script><![endif]-->
+    <script th:inline="javascript" th:src="@{/scripts/main.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        window.onload = function(){
+            var user = /*[[${user.getName()}]]*/;
+            var viewUser = /*[[${viewUser.getName()}]]*/;
+            if (user == viewUser){
+                $("#follow").hide();
+            }
+        }
+        function follow() {
+            var userId = /*[[${user.getId()}]]*/;
+            var followeeId = /*[[${viewUser.getId()}]]*/;
+            var follow =$("#follow").text();
+            if (follow=="加关注"){
+                $.ajax({
+                    url:"/followUser",
+                    type:"post",
+                    data:{"userId":userId,"followeeId":followeeId},
+                    dataType:"json",
+                    success:function(result) {
+                        if (result.code==0){
+                            $("#follow").val(false);
+                            $("#follow").text("已关注")
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"/unfollowUser",
+                    type:"post",
+                    data:{"userId":userId,"followeeId":followeeId},
+                    dataType:"json",
+                    success:function(result) {
+                        if (result.code==0){
+                            $("#follow").val(true);
+                            $("#follow").text("加关注")
+                        }
+                    }
+                })
+            }
+        }
+        /*]]>*/
+    </script>
     <!-- //js -->
 </head>
 <body>
+    <div id="wrapper">
+		<header id="header">
+            <h1>
+                <ul class="main">
+                    <li style="border-color: #3c3b3b;">
+                        <img style="border-color: #3c3b3b; padding: 1px; height: 50px;width: 50px;margin-top: 3px;margin-left: 10px" th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/>
+                    </li>
+                    <li>
+                        <a th:text="${user.getName()}"></a>
+                    </li>
+                </ul>
+            </h1>
+            <nav class="main">
+                <form style="display: inline;margin: 0px;float:right;">
+                    <input type="text"  placeholder="Search for..." style="display: inline">
+                    <span  style="display: inline">
+                        <button class="fa-bars"  type="submit">Go!</button>
+                    </span>
 
+                </form>
+            </nav>
+        </header>
+    </div>
 <!-- banner-body -->
 	<div class="banner-body">
+
 		<div class="container">
 			<div class="banner-body-content">
 			<div class="col-xs-3 banner-body-left">
 				<div class="logo">
-					<h1><a class="logo_head"><img th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/> </a></h1>
-                    <h1><a th:text="${user.name}" style="margin-top: 10px"></a></h1>
+					<h1><a th:href="@{/setting}" class="logo_head"><img  th:src="@{'http:'+${viewUser.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/> </a></h1>
+                    <h1><a th:text="${viewUser.name}" style="margin-top: 10px"></a></h1>
                 </div>
                 <div class="clearfix" style="height: 20px"> </div>
+                <div class="join" >
+                    <a href="javascript:;" onclick="follow()" id="follow" th:value="${follow}?:'false'" th:text="${follow}?'已关注':'加关注'"></a>
+                </div>
 				<div class="top-nav">
 					<nav class="navbar navbar-default">
 						<!-- Brand and toggle get grouped for better mobile display -->
@@ -43,11 +117,11 @@
 						<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
 							<nav class="stroke">
 								<ul class="nav navbar-nav">
-                                    <li class="active"><a th:href="@{'/'+${user.getId()}+'/home'}"><i class="edit"></i>Home</a></li>
+                                    <li class="active"><a th:href="@{'/user/'+${viewUser.getId()}}"><i class="edit"></i>Home</a></li>
 									<li><a th:href="@{/photo}" class="hvr-underline-from-left"><i class="picture1"></i>Photos</a></li>
-                                    <li><a th:href="@{'/'+${user.getId()}+'/blog'}" class="hvr-underline-from-left"><i class="home1"></i>Blog</a></li>
+                                    <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog'}" class="hvr-underline-from-left"><i class="home1"></i>Blog</a></li>
 									<li><a th:href="@{/editor}" class="hvr-underline-from-left"><i class="text-size1"></i>Editor</a></li>
-									<li><a th:href="@{/friends}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
+									<li><a th:href="@{'/user/'+${viewUser.getId()}+'/friends'}" class="hvr-underline-from-left"><i class="envelope1"></i>Friends</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -109,8 +183,8 @@
 			</div>
             <div class="col-xs-9 banner-body-right">
                     <div class="gallery-head">
-                        <h5><span th:text="${user.getName()}"></span>的窝</h5>
-                        <p th:text="${user.getSignature()}"></p>
+                        <h5><span th:text="${viewUser.getName()}"></span>的窝</h5>
+                        <p th:text="${viewUser.getSignature()}"></p>
                     </div>
                     <div class="blog">
                         <!--博客列表-->
@@ -194,7 +268,7 @@
 	</div>
 <!-- //banner-body -->
 <!-- for bootstrap working -->
-	<script src="../scripts/bootstrap.js"></script>
+	<script src="/scripts/bootstrap.js"></script>
 <!-- //for bootstrap working -->
 </body>
 </html>

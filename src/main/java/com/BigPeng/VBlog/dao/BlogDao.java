@@ -1,10 +1,7 @@
 package com.BigPeng.VBlog.dao;
 
 import com.BigPeng.VBlog.model.Blog;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -24,4 +21,12 @@ public interface BlogDao {
 
     @Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where blog_id=#{blogId}"})
     Blog getBlogById(int blogId);
+
+    @Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where user_id=#{userId} order by created_date desc"})
+    List<Blog> getBlogListByUserId(@Param("userId") int userId);
+
+    @Select({"select count(blog_id) from ",TABLE_NAME," where user_id=#{userId}"})
+    int getBlogCount(@Param("userId") int userId);
+
+
 }

@@ -1,9 +1,7 @@
 package com.BigPeng.VBlog.dao;
 
 import com.BigPeng.VBlog.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserDao {
@@ -22,4 +20,8 @@ public interface UserDao {
 
     @Insert({"insert into "+ TABLE_NAME+" ( "+INSERT_FIELDS+" ) values (#{name},#{password},#{salt},#{headUrl},#{email},#{signature})"})
     int addUser(User user);
+
+    @Update({"update "+ TABLE_NAME+" set head_url=#{headUrl} where id =#{userId}"})
+    int updateHeadUrl(@Param("headUrl") String headUrl,
+                      @Param("userId")int userId);
 }

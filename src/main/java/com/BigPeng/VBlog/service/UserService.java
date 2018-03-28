@@ -2,12 +2,16 @@ package com.BigPeng.VBlog.service;
 
 import com.BigPeng.VBlog.dao.LoginTicketDao;
 import com.BigPeng.VBlog.dao.UserDao;
+import com.BigPeng.VBlog.model.Blog;
 import com.BigPeng.VBlog.model.LoginTicket;
 import com.BigPeng.VBlog.model.User;
 import com.BigPeng.VBlog.util.VBlogUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
 
@@ -99,4 +103,5 @@ public class UserService {
         loginTicketDao.addTicket(loginTicket);
         return loginTicket.getTicket();
     }
+
 }

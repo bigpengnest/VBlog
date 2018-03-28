@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <script type="text/javascript" src="../scripts/jquery.1.11.1.min.js"></script>
+    <script type="text/javascript" src="../scripts/jquery-form.js"></script>
+</head>
+<body>
+<table>
+    <tr>
+        <td  id="imgDiv">
+            <img th:src="@{'http:'+${map.get('url')}}" id="imgid" style="width:137px; height:127px"/>
+        </td>
+    </tr>
+</table>
+<form enctype="multipart/form-data" id="upload" th:method="post" th:action="@{/uploadImage}"><p style='color:red;text-align:left;'>
+    注：<br/>1.照片的像素为160*180px。<br/>2.照片格式为BMP/JPG/JPEG。<br/>3.建议照片大小不超过40k。</p>
+    <input type="file" name="file" id="uploadimage"/><br/>
+    <input type="submit" value="上传" id="btn" style="width:137px; height:27px"/>
+    <input type="submit" value="保存" id="btn" style="width:137px; height:27px"/>
+</form>
+<span th:text="${msg}"></span>
+<!--<script type="text/javascript">
+    $(document).ready(function() {
+        $("#btn").click(function () {
+            alert("1111");
+            if(confirm("确认上传？")){
+                var imagePath = $("#uploadimage").val();
+                if (imagePath == "") {
+                    alert("please upload image file",2);
+                    return false;
+                }
+                var strExtension = imagePath.substr(imagePath.lastIndexOf('.') + 1);
+                if (strExtension!='jpg') {
+                    if (strExtension!='bmp') {
+                        if (strExtension!='png') {
+                            alert("please upload file that is a image",2);
+                            return false;
+                        }
+                    }
+                }
+                $("#upload").ajaxSubmit({
+                    type : 'POST',
+                    url : 'uploadImage',
+                    success : function(result) {
+                        if(result.state=='0'){
+                            $("#imgDiv").empty();
+                            $("#imgDiv").html('<img src="'+result.data+'" style="width:137px;height:127px;"/>');
+                            $("#imgDiv").show();
+                            $("#uploadimage").val("");
+                        }else{
+                            alert(result.msg+":"+result.data);
+                        }
+                    },
+                    error : function() {
+                        alert("上传失败，请检查网络后重试,上传文件太大");
+                    }
+                });
+            }
+        })
+    });
+</script>-->
+</body>
+</html>

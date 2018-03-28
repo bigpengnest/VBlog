@@ -1,11 +1,19 @@
 package com.BigPeng.VBlog.util;
 
+import com.BigPeng.VBlog.model.ResultDate;
+import com.BigPeng.VBlog.model.User;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +27,9 @@ public class VBlogUtil {
 
     public static int ANONYMOUS_USERID = 3;
     public static int SYSTEM_USERID = 3;
+
+    @Value("${web.upload-path}")
+    private static String path;
 
     public static String MD5(String key) {
         char hexDigits[] = {
@@ -105,4 +116,37 @@ public class VBlogUtil {
    //     txtcontent = txtcontent.substring(0,100);
         return txtcontent;
     }
+
+    public static String imageUrl(User user){
+        Date date = new Date();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String str = sf.format(date);
+        String url = "\\user\\"+user.getId()+"\\"+str+user.getId();
+
+        return url;
+    }
+
+
+    public static String getJSONString(int code,String msg){
+        JSONObject json = new JSONObject();
+        json.put("code",code);
+        json.put("msg",msg);
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(int code){
+        JSONObject json = new JSONObject();
+        json.put("code",code);
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(int code, Map<String, Object> map) {
+        JSONObject json = new JSONObject();
+        json.put("code", code);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            json.put(entry.getKey(), entry.getValue());
+        }
+        return json.toJSONString();
+    }
+
 }

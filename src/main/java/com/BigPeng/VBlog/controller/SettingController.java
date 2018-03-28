@@ -38,7 +38,7 @@ public class SettingController {
         if(ticket != null){
             LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
             if(loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "login";
+                return "redirect:/";
             user = userService.selectById(loginTicket.getUserId());
             model.addAttribute("user",user);
             return "setting";

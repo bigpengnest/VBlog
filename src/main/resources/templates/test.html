@@ -1,12 +1,34 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src='scripts/test.js' type="text/javascript" th:inline="javascript"></script>
+    <script src='/scripts/test.js' type="text/javascript" th:inline="javascript"></script>
+    <script src="/scripts/jquery.min.js" language="JavaScript"></script>
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        function checkForm() {
+            var name = $("#username").val();
+            $.ajax({
+                url: '/test/search',
+                type:"post",
+                data:{"username":name},
+                dataType:"json",
+                success: function (result) {
+                    var temp = result.name;
+                    var u_li ='<ul>\n'+
+                                '        <li>'+ temp +'</li>\n'+
+                                ' </ul>';
+                    var $li = $(u_li);
+                    $("#user_list").append($li);
+                }
+            });
+        }
+        /*]]>*/
+    </script>
 </head>
     <body>
-    <li>Map循环：
-        <div th:each="mapS:${blogs}">
-            <div th:text="${mapS.get('blog').getBlogId()}"></div>
-        </div>
-    </li>
+    <form onsubmit="checkForm()" method="post" id="searchform">
+        <input type="text" name="username" id="username">
+        <button type="submit">提交</button>
+    </form>
+    <div id="user_list"></div>
     </body>
 </html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table width="200" border="1">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">title</th>
+            <th scope="col">创建时间</th>
+        </tr>
+        <tr th:each="blog:${blogList}">
+            <td th:text="${blog.getBlogId()}"></td>
+            <td th:text="${blog.getBlogTitle()}"></td>
+            <td th:text="${#dates.format(blog.getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"> </td>
+        </tr>
+    </table>
+    <p>一共<span th:text="${page.getPages()}"></span>页</p>
+    <a th:href="@{'testPag?page='+${page.getFirstPage()}}">第一页</a>
+    <a th:href="@{'testPag?page='+${page.getNextPage()}}">下一页</a>
+    <a th:href="@{'testPag?page='+${page.getPrePage()}}">上一页</a>
+    <a th:href="@{'testPag?page='+${page.getLastPage()}}">最后页</a>
+</body>
+</html>
