@@ -9,8 +9,8 @@ import java.util.Map;
 public class EventModel {
     private EventType type;     //事件的类型
     private int actorId;        //事件触发者
-    private int entityType;     //entity:事件触发的载体
-    private int entityId;       //
+    private int entityType;     //entity:事件触发的类型
+    private int entityId;       //事件的Id
     private int entityOwnerId;  //事件的关联者
 
     public EventModel(EventType type){

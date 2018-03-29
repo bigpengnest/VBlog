@@ -5,10 +5,7 @@ import com.BigPeng.VBlog.async.EventProducer;
 import com.BigPeng.VBlog.async.EventType;
 import com.BigPeng.VBlog.dao.LoginTicketDao;
 import com.BigPeng.VBlog.dao.ViewObject;
-import com.BigPeng.VBlog.model.Blog;
-import com.BigPeng.VBlog.model.EntityType;
-import com.BigPeng.VBlog.model.LoginTicket;
-import com.BigPeng.VBlog.model.User;
+import com.BigPeng.VBlog.model.*;
 import com.BigPeng.VBlog.service.BlogService;
 import com.BigPeng.VBlog.service.CommentService;
 import com.BigPeng.VBlog.service.FollowService;
@@ -36,8 +33,9 @@ public class FollowController {
     UserService userService;
 
     @Autowired
-    LoginTicketDao loginTicketDao;
+    HostHolder hostHolder;
 
+    @Autowired
     EventProducer eventProducer;
 
     @RequestMapping(path = {"/followUser"},method = {RequestMethod.POST})
@@ -48,10 +46,10 @@ public class FollowController {
         System.out.println(userId+"+"+followeeId);
 
         boolean ret = followService.follow(userId, EntityType.ENTITY_USER,followeeId);
-/*        eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
+        eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
                 .setActorId(userId)
-                .setEntityId(userId)
-                .setEntityOwnerId(userId));*/
+                .setEntityId(followeeId)
+                .setEntityOwnerId(followeeId).setEntityType(0));
 
         System.out.println(ret);
         model.addAttribute("follow",true);
@@ -66,10 +64,10 @@ public class FollowController {
         System.out.println(userId+"+"+followeeId);
 
         boolean ret = followService.unfollow(userId, EntityType.ENTITY_USER,followeeId);
-/*        eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
+        eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
                 .setActorId(userId)
-                .setEntityId(userId)
-                .setEntityOwnerId(userId));*/
+                .setEntityId(followeeId)
+                .setEntityOwnerId(followeeId).setEntityType(1));
 
         System.out.println(ret);
         model.addAttribute("follow",false);
@@ -82,40 +80,32 @@ public class FollowController {
                           HttpServletRequest request){
         User user = new User();
         User viewUser = new User();
-        String ticket = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("ticket")) {
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
         }
-        if (ticket != null) {
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "redirect:/";
-            user = userService.selectById(loginTicket.getUserId());
-            viewUser = userService.selectById(userId);
-            int followerCount = (int)followService.getFollowerCount(userId,EntityType.ENTITY_USER);
-            List<Integer> followerId = followService.getFollowers(userId,EntityType.ENTITY_USER,followerCount);
-            List<User> followers = new ArrayList<>();
-            for (int id:followerId){
-                followers.add(userService.selectById(id));
-            }
-            int followeeCount = (int)followService.getFolloweeCount(userId,EntityType.ENTITY_USER);
-            List<Integer> followeeId = followService.getFollowees(userId,EntityType.ENTITY_USER,followeeCount);
-            List<User> followees = new ArrayList<>();
-            for (int id:followeeId){
-                followees.add(userService.selectById(id));
-            }
-            boolean follow = followService.isFollower(user.getId(),EntityType.ENTITY_USER,userId);
-            model.addAttribute("followers",followers);
-            model.addAttribute("followees",followees);
-            model.addAttribute("user", user);
-            model.addAttribute("follow",follow);
-            model.addAttribute("viewUser", viewUser);
+        viewUser = userService.selectById(userId);
+        int followerCount = (int)followService.getFollowerCount(userId,EntityType.ENTITY_USER);
+        List<Integer> followerId = followService.getFollowers(userId,EntityType.ENTITY_USER,followerCount);
+        List<User> followers = new ArrayList<>();
+        for (int id:followerId){
+            followers.add(userService.selectById(id));
         }
+        int followeeCount = (int)followService.getFolloweeCount(userId,EntityType.ENTITY_USER);
+        List<Integer> followeeId = followService.getFollowees(userId,EntityType.ENTITY_USER,followeeCount);
+        List<User> followees = new ArrayList<>();
+        for (int id:followeeId){
+            followees.add(userService.selectById(id));
+        }
+        boolean follow = followService.isFollower(user.getId(),EntityType.ENTITY_USER,userId);
+
+        model.addAttribute("followers",followers);
+        model.addAttribute("followees",followees);
+        model.addAttribute("user", user);
+        model.addAttribute("follow",follow);
+        model.addAttribute("viewUser", viewUser);
+
         return "follow";
     }
 }

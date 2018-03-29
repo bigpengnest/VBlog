@@ -5,6 +5,7 @@ import com.BigPeng.VBlog.dao.ViewObject;
 import com.BigPeng.VBlog.model.*;
 import com.BigPeng.VBlog.service.BlogService;
 import com.BigPeng.VBlog.service.CommentService;
+import com.BigPeng.VBlog.service.FollowService;
 import com.BigPeng.VBlog.service.UserService;
 import com.BigPeng.VBlog.util.VBlogUtil;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,9 @@ public class BlogController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    FollowService followService;
+
     @RequestMapping("/editor")
     public String showPage(Model model){
         Blog blog = new Blog();
@@ -53,21 +57,11 @@ public class BlogController {
         String ticket = null;
         String content = request.getParameter("myContent");
         User user = null;
-        if(request.getCookies()!=null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
         }
-        if(ticket != null) {
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "login";
-            user = userService.selectById(loginTicket.getUserId());
-        }
-
         try {
             blog.setCommentCount(0);
             blog.setCreatedDate(new Date());
@@ -89,9 +83,17 @@ public class BlogController {
 
     @RequestMapping("/blog/{blogId}")
     public String blogDetail(Model model,
-                             @PathVariable("blogId") int blogId){
+                             @PathVariable("blogId") int blogId,
+                             HttpServletRequest request){
         Blog blog = blogService.getBlogById(blogId);
-        User user = userService.selectById(blog.getUserId());
+        User viewUser = userService.selectById(blog.getUserId());
+        String ticket = null;
+        User user = new User();
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
+        }
         List<Comment> commentList= commentService.selectCommentByEntity(blogId,EntityType.ENTITY_BLOG);
         int commentCount = commentService.getCommentCount(blogId,EntityType.ENTITY_BLOG);
 
@@ -105,9 +107,12 @@ public class BlogController {
             vo.set("comment",comment);
             comments.add(vo);
         }
+        boolean follow = followService.isFollower(user.getId(),EntityType.ENTITY_USER,viewUser.getId());
         model.addAttribute("blog",blog);
         model.addAttribute("user",user);
+        model.addAttribute("viewUser",viewUser);
         model.addAttribute("comments",comments);
+        model.addAttribute("follow",follow);
         model.addAttribute("commentCount",commentCount);
         return "detail";
     }

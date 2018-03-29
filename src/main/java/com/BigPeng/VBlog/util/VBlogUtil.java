@@ -134,6 +134,16 @@ public class VBlogUtil {
         return json.toJSONString();
     }
 
+    public static String getJSONString(boolean status){
+        JSONObject json = new JSONObject();
+        if (status) {
+            json.put("status", 0);
+        }else {
+            json.put("status",1);
+        }
+        return json.toJSONString();
+    }
+
     public static String getJSONString(int code){
         JSONObject json = new JSONObject();
         json.put("code",code);
@@ -144,6 +154,14 @@ public class VBlogUtil {
         JSONObject json = new JSONObject();
         json.put("code", code);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
+            json.put(entry.getKey(), entry.getValue());
+        }
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(Map<String, String> map) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             json.put(entry.getKey(), entry.getValue());
         }
         return json.toJSONString();

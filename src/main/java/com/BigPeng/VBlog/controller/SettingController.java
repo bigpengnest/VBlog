@@ -1,6 +1,7 @@
 package com.BigPeng.VBlog.controller;
 
 import com.BigPeng.VBlog.dao.LoginTicketDao;
+import com.BigPeng.VBlog.model.HostHolder;
 import com.BigPeng.VBlog.model.LoginTicket;
 import com.BigPeng.VBlog.model.User;
 import com.BigPeng.VBlog.service.UserService;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class SettingController {
 
     @Autowired
-    LoginTicketDao loginTicketDao;
+    HostHolder hostHolder;
 
     @Autowired
     UserService userService;
@@ -26,25 +27,12 @@ public class SettingController {
     public String setting(Model model,
                           HttpServletRequest request){
         User user = new User();
-        String ticket = null;
-        if(request.getCookies()!=null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if(ticket != null){
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if(loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "redirect:/";
-            user = userService.selectById(loginTicket.getUserId());
-            model.addAttribute("user",user);
-            return "setting";
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
         }else {
-            model.addAttribute("user",user);
             return "redirect:/";
         }
+        model.addAttribute("user",user);
+        return "setting";
     }
 }

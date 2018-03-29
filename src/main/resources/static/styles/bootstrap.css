@@ -1950,7 +1950,7 @@ pre code {
     width: 58.33333333%;
   }
   .col-md-6 {
-    width: 100%;
+    width: auto;
   }
   .col-md-5 {
     width: 41.66666667%;

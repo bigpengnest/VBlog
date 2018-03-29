@@ -36,34 +36,9 @@ public class UserService {
         return userDao.selectByEmail(email);
     }
 
-    public Map<String,String> register(String username,String password,String email){
+    public boolean register(String username,String password,String email){
         Map<String,String> map = new HashMap<>();
-
-        if (StringUtils.isEmpty(email)){
-            map.put("msg","邮箱不能为空！");
-            return map;
-        }
-
-        if (StringUtils.isEmpty(username)){
-            map.put("msg","用户名不能为空！");
-            return map;
-        }
-        if (StringUtils.isEmpty(password)){
-            map.put("msg","密码不能为空！");
-            return map;
-        }
-        User user = userDao.selectByEmail(email);
-
-        if (user!=null){
-            map.put("msg","邮箱已经被注册！");
-            return map;
-        }
-        user = userDao.selectByName(username);
-        if (user!=null){
-            map.put("msg","用户名已存在！");
-            return map;
-        }
-        user = new User();
+        User user = new User();
         user.setName(username);
         user.setSalt(UUID.randomUUID().toString().substring(0,5));
         user.setHeadUrl("\\ueditor\\jsp\\upload\\image\\default\\headimg.jpg");
@@ -71,8 +46,7 @@ public class UserService {
         user.setEmail(email);
         user.setSignature(" ");
         userDao.addUser(user);
-
-        return map;
+        return true;
     }
 
     public Map<String,String> login(String username, String password){
@@ -80,13 +54,17 @@ public class UserService {
         User user = selectByName(username);
         if (user ==null){
             map.put("msg","用户名不存在");
+            map.put("status","1");
             return map;
         }
         if (!user.getPassword().equals(VBlogUtil.MD5(password+user.getSalt()))){
+            map.put("status","2");
             map.put("msg","密码错误！");
             return map;
         }
         String ticket = addLoginTicket(user.getId());
+        map.put("userId",String.valueOf(user.getId()));
+        map.put("status","0");
         map.put("ticket",ticket);
         return map;
     }

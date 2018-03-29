@@ -3,6 +3,7 @@ package com.BigPeng.VBlog.controller;
 import com.BigPeng.VBlog.baidu.ueditor.ActionEnter;
 import com.BigPeng.VBlog.dao.LoginTicketDao;
 import com.BigPeng.VBlog.dao.MessageEntity;
+import com.BigPeng.VBlog.model.HostHolder;
 import com.BigPeng.VBlog.model.LoginTicket;
 import com.BigPeng.VBlog.model.User;
 import com.BigPeng.VBlog.service.UploadImageService;
@@ -35,6 +36,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    HostHolder hostHolder;
+
     @RequestMapping(value="/config")
     public void config(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
@@ -50,26 +54,14 @@ public class UserController {
         }
     }
 
-
     @RequestMapping(path = {"/upimage"})
     public String upimge(Model model,
                          HttpServletRequest request){
-        String ticket = null;
-
-        User user = null;
-        if(request.getCookies()!=null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if(ticket != null) {
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "login";
-            user = userService.selectById(loginTicket.getUserId());
+        User user = new User();
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
         }
         model.addAttribute("user",user);
         return "upimage";
@@ -80,21 +72,11 @@ public class UserController {
                               @RequestParam(value = "file", required = true) MultipartFile file,
                               HttpServletRequest request) throws IOException {
 
-        String ticket = null;
-        User user = null;
-        if(request.getCookies()!=null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if(ticket != null) {
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "login";
-            user = userService.selectById(loginTicket.getUserId());
+        User user = new User();
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
         }
         Map<String,String> map = uploadImageService.uploadImage(file,user);
         model.addAttribute("user",user);

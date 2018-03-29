@@ -1,3 +1,6 @@
+.msg-text-bottom{
+	margin-top: 40px;
+}
 .join{
 	text-align: center;
 }
@@ -38,8 +41,8 @@
 }
 
 .content_home{
-	height: 80px;
-	width: 472px;
+	height: 150px;
+	width: auto;
 	overflow: hidden;
 	word-wrap:break-word;
 	word-break:break-all;
@@ -51,7 +54,7 @@
 	border:1px dotted #999;
 }
 .blog-grid{
-	margin-top: 20px;
+	margin-top: 40px;
 }
 html, body{
     font-size: 100%;
@@ -754,8 +757,9 @@ figure.effect-winston:hover figcaption::before {
 /*-- //gallery --*/
 /*-- blog --*/
 .blog-grid-left img{
-	width: 221px;
-	height: 151.1px;
+	margin: 0 auto;
+	width: 300px;
+	height: 205.1px;
 	padding:.3em;
 	border:1px dotted #999;
 }
@@ -1084,7 +1088,8 @@ li.list-group-item1 {
   background: #e0e0e0;
 }
 .grid_3{
-	margin-bottom:2em;
+	margin: 40px auto;
+	width: auto;
 }
 .xs h3, h3.m_1{
 	color:#000;

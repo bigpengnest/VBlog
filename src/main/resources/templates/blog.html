@@ -69,10 +69,12 @@
             <h1>
                 <ul class="main">
                     <li style="border-color: #3c3b3b;">
-                        <img style="border-color: #3c3b3b; padding: 1px; height: 50px;width: 50px;margin-top: 3px;margin-left: 10px" th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/>
+                        <a th:href="@{'/user/'+${user.getId()}}">
+                            <img style="border-color: #3c3b3b; padding: 1px; height: 50px;width: 50px;margin-top: 3px;margin-left: 10px" th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/>
+                        </a>
                     </li>
                     <li>
-                        <a th:text="${user.getName()}"></a>
+                        <a th:text="${user.getName()}"}></a>
                     </li>
                 </ul>
             </h1>
@@ -189,18 +191,18 @@
                     <!--博客列表-->
                     <div class="blog-grid" th:each="blogMap:${blogs}">
                         <div class="col-xs-4 blog-grid-left">
-                            <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}"  alt=" " class="img-responsive" /></a>
+                            <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}" class="img-responsive" /></a>
                         </div>
                         <div class="col-xs-8 blog-grid-right">
                             <h4><a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}" th:text="${blogMap.get('blog').getBlogTitle()}?:'meiyoushuju'"/><p th:text="${#dates.format(blogMap.get('blog').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"></p></h4>
                             <div class="content_home"><p th:utext="${blogMap.get('blog').getContent()}"></p></div>
-                            <a href="detail.html"><span th:text="${blogMap.get('count')}"></span>条评论</a>
+                            <a href="#"><span th:text="${blogMap.get('count')}"></span>条评论</a>
                         </div>
                         <div class="clearfix"> </div>
                     </div>
                 </div>
                 <div class="grid_3 grid_5">
-                    <div class="col-md-6" style="display: inline">
+                    <div class="col-md-6" style="display: inline;margin: 0 auto">
                         <nav>
                             <ul class="pagination pagination-lg" style="display: inline">
                                 <li><a th:href="@{'/user/'+${viewUser.getId()}+'/blog?page='+${page.getFirstPage()}}" aria-label="Previous"><span aria-hidden="true">第一页</span></a></li>

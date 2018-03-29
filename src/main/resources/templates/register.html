@@ -3,16 +3,15 @@
 <head>
 	<meta charset="utf-8">
 	<title>注册 - 鸟窝</title>
-	<link rel="stylesheet" type="text/css" href="../styles/register-login.css">
+	<link rel="stylesheet" type="text/css" th:href="@{/styles/register-login.css}">
+
 </head>
 <body>
 <div id="box"></div>
 <div class="cent-box register-box">
 	<div class="cent-box-header">
 		<h1 class="main-title hide">知乎</h1>
-		<h2 class="sub-title" th:text="${msg}?:'大人者，不失其赤子之心也'">
-
-		</h2>
+		<h2 class="sub-title" id="msg">大人者，不失其赤子之心也</h2>
 	</div>
 
 	<div class="cont-main clearfix">
@@ -23,36 +22,119 @@
 				<div class="slide-bar slide-bar1"></div>				
 			</div>
 		</div>
-		<form th:action="@{reg}" th:object="${user}" th:method="post">
 			<div class="login form">
 				<div class="group">
 					<div class="group-ipt email">
-						<input th:feild="*{email}"  type="email" name="email" id="email" class="ipt" placeholder="邮箱地址" required>
+						<input onblur="checkemail()" type="email" name="email" id="email" class="ipt" placeholder="邮箱地址" required>
 					</div>
 					<div class="group-ipt email">
-						<input th:feild="*{name}" type="text" name="name" id="name" class="ipt" placeholder="选择一个用户名" required>
+						<input onblur="checkname()" type="text" name="name" id="name" class="ipt" placeholder="你是只什么鸟" required>
 					</div>
 					<div class="group-ipt password">
 						<input type="password" name="password" id="password" class="ipt" placeholder="设置登录密码" required>
 					</div>
-					<div class="group-ipt password1">
-						<input th:feild="*{password}" type="password" name="password1" id="password1" class="ipt" placeholder="重复密码" required>
+					<div class="group-ipt passwordtwo">
+						<input type="password" name="passwordtwo" id="passwordtwo" class="ipt" placeholder="重复密码" required>
 					</div>
 				</div>
 			</div>
 
 			<div class="button">
-				<button type="submit" class="login-btn register-btn" id="button" >注册</button>
+				<button type="submit" class="login-btn register-btn" id="button" onclick="register()" method="">注册</button>
 			</div>
 
-		</form>
 	</div>
 </div>
+<script th:src="@{/scripts/particles.js}" type="text/javascript"></script>
+<script th:src="@{/scripts/background.js}" type="text/javascript"></script>
+<script th:src="@{/scripts/jquery.min.js}" type="text/javascript"></script>
+<script>
+    function checkemail() {
+        $("#msg").html("大人者，不失其赤子之心也");
+        var myReg=/^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
+        var email = $("#email").val().trim();
+        if(email==null){
+            $("#msg").html("邮箱不能为空");
+            $("#email").val("");
+        }else if (myReg.test(email)){
+            $.ajax({
+                url:"/checkemail",
+                type:"post",
+                data:{"email":email},
+                dataType:"json",
+                success:function(result) {
+                    var status = result.status;
+                    if (status==1){
+                        $("#msg").html("邮箱已被注册");
+                        $("#email").val("");
+                    }
+                }
+            })
+        }else{
+            $("#msg").html("邮箱格式错误");
+            $("#email").val("");
+        }
+    }
 
-<script src='../scripts/particles.js' type="text/javascript"></script>
-<script src='../scripts/background.js' type="text/javascript"></script>
-<script src='../scripts/jquery.min.js' type="text/javascript"></script>
-<script src='../scripts/layer/layer.js' type="text/javascript"></script>
-<script src='../scripts/index.js' type="text/javascript"></script>
+    function checkname(){
+        $("#msg").html("大人者，不失其赤子之心也");
+        var username = $("#name").val().trim();
+        if(username == null){
+            $("#msg").html("用户名不能为空");
+            $("#name").val("");
+        }else{
+            $.ajax({
+                url:"/checkname",
+                type:"post",
+                data:{"username":username},
+                dataType:"json",
+                success:function(result) {
+                    var status = result.status;
+                    if (status==1){
+                        $("#msg").html("用户名已注册");
+                        $("#name").val("");
+                    }
+                }
+            })
+        }
+    }
+
+    function register(){
+        $("#msg").html("大人者，不失其赤子之心也");
+        var email = $("#email").val().trim();
+        var username = $("#name").val().trim();
+        var password = $("#password").val().trim();
+        var passwordtwo = $("#passwordtwo").val().trim();
+        if(username==null){
+            $("#msg").html("用户名不能为空");
+            $("#name").val("");
+        }else if(email == null){
+            $("#msg").html("邮箱不能为空");
+            $("#password").val("");
+        }else if (password!=passwordtwo){
+            alert("buyizhi");
+            $("#msg").html("密码输入不一致");
+            $("#password").val("");
+            $("#passwordtwo").val("");
+        }else{
+            alert("yizhi");
+            $.ajax({
+                url:"/reg",
+                type:"post",
+                data:{"email":email,"username":username,"password":password},
+                dataType:"json",
+                success:function(result) {
+                    var status = result.status;
+                    if (status==0){
+                        window.location.href="/";
+                    }else{
+                        $("#msg").html("系统错误，稍后再试");
+                    }
+                }
+            })
+        }
+    }
+</script>
+
 </body>
 </html>

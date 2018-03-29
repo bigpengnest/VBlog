@@ -1,7 +1,12 @@
 package com.BigPeng.VBlog.controller;
 
+import com.BigPeng.VBlog.async.EventHandler;
+import com.BigPeng.VBlog.async.EventModel;
+import com.BigPeng.VBlog.async.EventProducer;
+import com.BigPeng.VBlog.async.EventType;
 import com.BigPeng.VBlog.dao.LoginTicketDao;
 import com.BigPeng.VBlog.model.*;
+import com.BigPeng.VBlog.service.BlogService;
 import com.BigPeng.VBlog.service.CommentService;
 import com.BigPeng.VBlog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +25,29 @@ public class CommentController {
     CommentService commentService;
 
     @Autowired
-    LoginTicketDao loginTicketDao;
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    HostHolder hostHolder;
+
+    @Autowired
+    EventProducer eventProducer;
+
+    @Autowired
+    BlogService blogService;
 
     @RequestMapping(path = {"/blog/{blogId}/addComment"})
     public String addComment(@PathVariable("blogId") int blogId,
                            HttpServletRequest request){
         String ticket = null;
         String commnet = request.getParameter("commet_content");
-        User user = null;
-        if(request.getCookies()!=null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
+        User user = new User();
+        if (hostHolder.getUser()!=null) {
+            user = hostHolder.getUser();
+        }else {
+            return "redirect:/";
         }
-        if(ticket != null) {
-            LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0)
-                return "redirect:/";
-            user = userService.selectById(loginTicket.getUserId());
-        }
+        Blog blog = blogService.getBlogById(blogId);
         Comment comment = new Comment();
         comment.setContent(commnet);
         comment.setCreatedDate(new Date());
@@ -53,6 +56,11 @@ public class CommentController {
         comment.setEntityType(EntityType.ENTITY_BLOG);
         comment.setStatus(0);
         int count = commentService.addComment(comment);
+
+        eventProducer.fireEvent(new EventModel(EventType.COMMENT)
+                .setActorId(user.getId())
+                .setEntityId(blogId)
+                .setEntityOwnerId(blog.getUserId()));
         return "redirect:/blog/"+blogId;
     }
 }

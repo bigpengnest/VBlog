@@ -69,10 +69,12 @@
             <h1>
                 <ul class="main">
                     <li style="border-color: #3c3b3b;">
-                        <img style="border-color: #3c3b3b; padding: 1px; height: 50px;width: 50px;margin-top: 3px;margin-left: 10px" th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/>
+                        <a th:href="@{'/user/'+${user.getId()}}">
+                            <img style="border-color: #3c3b3b; padding: 1px; height: 50px;width: 50px;margin-top: 3px;margin-left: 10px" th:src="@{'http:'+${user.getHeadUrl()}?:'\ueditor\jsp\upload\image\default\headimg.jpg'}"/>
+                        </a>
                     </li>
                     <li>
-                        <a th:text="${user.getName()}"></a>
+                        <a th:text="${user.getName()}" ></a>
                     </li>
                 </ul>
             </h1>
@@ -129,47 +131,17 @@
 					</nav>
 				</div>
                 <div class="latest-news">
-                    <h2>Latest News</h2>
-                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="headingOne">
+                    <h2 >Latest News</h2>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" >
+                        <div class="panel panel-default" th:each="message:${messages}" >
+                            <div class="panel-heading" role="tab" th:id="'heading'+${message.get('index')}">
                                 <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Michael Vol
+                                    <a th:text="'来自'+${message.get('fromUser')}+'的消息'"  role="button" data-toggle="collapse" data-parent="#accordion" th:href="'#collapse'+${message.get('index')}" aria-expanded="false" th:aria-controls="'collapse'+${message.get('index')}">
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                                <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="headingTwo">
-                                <h4 class="panel-title">
-                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Andrew Rich
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="headingThree">
-                                <h4 class="panel-title">
-                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        Rita Rock
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry.
+                            <div th:id="'collapse'+${message.get('index')}" class="panel-collapse collapse in" role="tabpanel" th:aria-labelledby="'heading'+${message.get('index')}">
+                                <div class="panel-body" th:text="${message.get('content')}">
                                 </div>
                             </div>
                         </div>
@@ -177,8 +149,6 @@
                     <div class="join">
                         <a href="detail.html">Learn More</a>
                     </div>
-                    <h3>Benefits</h3>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
                 </div>
 			</div>
             <div class="col-xs-9 banner-body-right">
@@ -190,12 +160,14 @@
                         <!--博客列表-->
                         <div class="blog-grid" th:each="blogMap:${blogs}">
                             <div class="col-xs-4 blog-grid-left" >
-                                <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}"><img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}"  alt=" " class="img-responsive" /></a>
+                                <a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}">
+                                    <img th:src="@{'http:'+${blogMap.get('blog').getImgsrc()}}" class="img-responsive" />
+                                </a>
                             </div>
                             <div class="col-xs-8 blog-grid-right">
                                 <h4><a th:href="@{'/blog/'+ ${blogMap.get('blog').getBlogId()}}" th:text="${blogMap.get('blog').getBlogTitle()}?:'meiyoushuju'"/><p th:text="${#dates.format(blogMap.get('blog').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}?:'no date'"></p></h4>
                                 <div class="content_home"><p th:utext="${blogMap.get('blog').getContent()}"></p></div>
-                                <a href="detail.html"><span th:text="${blogMap.get('count')}"></span>条评论</a>
+                                <a href="#"><span th:text="${blogMap.get('count')}"></span>条评论</a>
                             </div>
                             <div class="clearfix"> </div>
                         </div>
